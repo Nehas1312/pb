@@ -20,7 +20,10 @@
   "homepage": "https://github.com/Nehas1312/pb#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "dotnet": "^1.1.4",
     "express": "^4.17.3",
+    "mongoose": "^6.2.7",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

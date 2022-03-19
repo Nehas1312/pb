@@ -1,9 +1,11 @@
+require('dotenv').config()
 const { request, response } = require("express");
 const express = require("express");
 const morgan = require('morgan');
 const app = express();
 app.use(express.json())
 app.use(express.static('build'))
+const Person =require("./models/persons")
 
 morgan.token('type', (request,response) => 
 {
@@ -31,7 +33,7 @@ let persons = [
   },
   {
     id: 4,
-    name: "Mary Poppendieck",
+    name: "Mary jane",
     number: "39-23-6423122",
   },
 ];
@@ -68,6 +70,12 @@ app.get('/api/persons/:id',(request,response)=>{
     response.status(404).end()
   } 
 })
+// app.get('/api/persons/:id', (request, response) => {
+//   Person.findById(request.params.id).then(person => {
+//     response.json(person)
+//   })
+// })
+
 
 app.post('/api/persons',(request,response)=>{
   const body = request.body
@@ -85,17 +93,19 @@ app.post('/api/persons',(request,response)=>{
   })
   }
 
-  const person = {
+  const person =new Person( {
     name : body.name,
     number:body.number,
     date: new Date(),
     id:generateId(),
-  }
+  })
   
   persons = persons.concat(person)
 
   morgan.token()
-  response.json(person)
+  person.save().then(savedPerson=>{
+    response.json(savedPerson)
+  })
 })
 
 app.delete('/api/persons/:id',(request,response)=>{
@@ -105,7 +115,7 @@ app.delete('/api/persons/:id',(request,response)=>{
   console.log(`Deleted sucessfully`)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });
