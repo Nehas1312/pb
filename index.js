@@ -111,6 +111,10 @@ app.post('/api/persons',(request,response)=>{
 app.delete('/api/persons/:id',(request,response)=>{
   const id = Number(request.params.id)
   const person = persons.filter(person => person.id !== id)
+  morgan.token()
+  person.save().then(deletedPerson=>{
+    response.json(deletedPerson)
+  })
   response.status(204).end()
   console.log(`Deleted sucessfully`)
 })
