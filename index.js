@@ -63,57 +63,20 @@ app.get("/info", (request, response) => {
 });
 
 
-app.get('/api/persons/:id',(request,response)=>{
-  const id = Number(request.params.id)
-  const person = Contacts.find(person => person.id == id ).catch(error=>next(error))
-  
-  if (person){
-    response.json(person)
-  }
-  else{
-    response.status(404).end()
-  } 
+app.get('/api/persons/:objectId', (request, response, next) => {
+  Contacts.findById(request.params.objectId)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      next(error)
+    })
 })
-// app.get('/api/persons/:id', (request, response) => {
-//   Contacts.findById(request.params.id).then(person => {
-//     response.json(person)
-//   })
-// })
 
-
-// app.post('/api/persons',(request,response)=>{
-//   const body = request.body
-//   console.log(request.body)
-  
-//   if (Contacts.findIndex((person) => person.name === body.name) !== -1) {
-//     const person = Contacts( {
-//       name : body.name,
-//       number:body.number,
-//       date: new Date(),
-//       id:body.id,
-//     })
-//   }
-  
-//    else if (!body.name || !body.number){
-//     return  response.status(404).json({
-//     error :'name or number is missing'
-//   })
-//   }
-
-//   const person =new Contacts( {
-//     name : body.name,
-//     number:body.number,
-//     date: new Date(),
-//     id:generateId(),
-//   })
-  
-//   Contacts = Contacts.concat(person)
-
-//   morgan.token()
-//   Contacts.save().then(savedContacts=>{
-//     response.json(savedContacts)
-//   })
-// })
 app.post('/api/persons',(request,response) =>
 {
     const body = request.body
