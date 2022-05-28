@@ -77,7 +77,7 @@ app.get('/api/persons/:objectId', (request, response, next) => {
     })
 })
 
-app.post('/api/persons',(request,response) =>
+app.post('/api/persons',(request,response,next) =>
 {
     const body = request.body
 
@@ -95,6 +95,7 @@ app.post('/api/persons',(request,response) =>
         {
             response.json(savedContacts)
         })
+        .catch(error=>next(error))
 }) 
 
 app.put('/api/persons/:objectId', (request, response, next) => {
@@ -128,7 +129,12 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+  assert.equal(error.errors['name'].message,
+  'Path `name` is required.');
 
   next(error)
 }
